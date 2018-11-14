@@ -1,6 +1,6 @@
 <template>
     <div>
-      {{status}}
+      {{$t("message." + status)}}
       <div v-if="!transfered">
         <InputFile @change="fileSelected"/>
       </div>
@@ -17,6 +17,7 @@ import { sendMessage, CommandType, readMessage } from "@/SignallingServer";
 import { Peer } from "@/FileTransferPeer";
 import { codecBuffer, SpeedCounter, sizestr } from "@/utils";
 import InputFile from "@/components/InputFile.vue";
+import { messages } from '@/localization';
 
 @Component({
   components: { InputFile }
@@ -28,7 +29,7 @@ export default class FileSender extends Vue {
   transfered: number = 0;
   sc = new SpeedCounter();
   sizestr = sizestr;
-  status = "Attente de séléction de fichier...";
+  status: keyof typeof messages['fr']['message'] = "fileselect";
 
   fileInfo: { name: string; size: number } | {} = {};
 
@@ -37,15 +38,15 @@ export default class FileSender extends Vue {
     if (!fileinput.files || fileinput.files.length == 0) return;
     let file = fileinput.files[0];
     this.fileInfo = { name: file.name, size: file.size };
-    this.status = "Attente de connection du pair";
+    this.status = "waiting";
     if (!Peer.connected) {
       await Peer.setRemoteDescription(
         await readMessage<RTCSessionDescriptionInit>()
       );
       await Peer.setSDP(await Peer.createAnswer());
       await Peer.connect();
-    }
-    this.status = "Pair connecté, envoi des informations de transfert";
+    };
+    this.status = 'sendingmeta';
     let filechannel = await Peer.waitDataChannel("file");
     let datachannel = await Peer.waitDataChannel("data");
     let mess = await filechannel.send(
@@ -55,13 +56,13 @@ export default class FileSender extends Vue {
         size: file.size
       })
     );
-    this.status = "Pair connecté, attente d'acceptation...";
+    this.status = "waitingack";
     let ack = await filechannel.read<boolean>();
     if (!ack) {
-      this.status = "Le pair a refusé le fichier.";
+      this.status = "filerefused";
       await filechannel.send("null");
     } else {
-      this.status = "Transfert en cours....";
+      this.status = "transfering";
       let remaining = file.size;
       let offset = 0;
       await datachannel.open();
@@ -77,7 +78,7 @@ export default class FileSender extends Vue {
           this.sc.addMeasure(buff.byteLength);
         }
       } catch (e) {
-        this.status = "Une erreur est intervenue" + e.toString();
+        this.status = "error";
       }
     }
     this.$emit("transferFinished", ack);

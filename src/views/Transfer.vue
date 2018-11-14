@@ -2,7 +2,7 @@
 <div>
   <TransferDialog @inputfile="onInputFileChange" @error="setError" :token="$route.params.tok"/>
   <div v-if="info && !transfering">
-    Accept? {{info.name}} ({{sizestr(info.size)}})
+    {{$t('message.accept')}} {{info.name}} ({{sizestr(info.size)}})
       <input :v-model="key" v-if="info.isEncrypted" placeholder="00112233445566778899AABBCCDDEEFF00112233445566778899AABBCCDDEEFF">
       <input type="button" value="Yes" @click="startDownload">
       <input type="button" value="No" @click="refuseFile">
@@ -11,7 +11,7 @@
     {{sizestr(downloaded)}} / {{sizestr(info.size)}} ({{sizestr(sc.speed)}}/s)
   </div>
   <div v-else>
-    En attente...
+    {{$t('message.waitingtransfer')}}
   </div>
   <div v-if="error">{{error}}</div>
 </div>

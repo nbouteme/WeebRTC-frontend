@@ -1,6 +1,6 @@
 <template>
   <CopyableText>
-    <label slot="name">Token</label>
+    <label slot="name">{{$t('message.token')}}</label>
     <span slot="hidden">{{myorigin}}/</span>
     <router-link slot="content" :to="token">{{token}}</router-link>
   </CopyableText>

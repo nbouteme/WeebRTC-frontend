@@ -1,6 +1,6 @@
 <template>
   <CopyableText  v-if="opts.encrypted">
-    <label slot="name">Key</label>
+    <label slot="name">{{$t('message.key')}}</label>
     <span slot="hidden"></span>
     <label slot="content">{{opts.key}}</label>
   </CopyableText>

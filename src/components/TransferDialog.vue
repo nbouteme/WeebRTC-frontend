@@ -1,6 +1,6 @@
 <template>
     <div>
-      {{status}}
+      {{$t('message.' + status)}}
     </div>
 </template>
 
@@ -9,20 +9,21 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { sendMessage, CommandType, readMessage } from "@/SignallingServer";
 import { Peer } from "@/FileTransferPeer";
 import { FileInfo } from "@/views/Transfer.vue";
+import { messages } from '@/localization';
 
 @Component
 export default class TransferDialog extends Vue {
   @Prop()
   token!: string;
 
-  status = "";
+  status: keyof typeof messages['en']['message'] = "none";
 
   async created() {
     try {
       await sendMessage(JSON.stringify([CommandType.Join, this.token]));
       let message = await readMessage<boolean>();
       if (!message) return this.$router.replace("/");
-      this.status = "Connecté à la salle, recherche du pair...";
+      this.status = "connectedLobby";
       let filechannel = await Peer.createChannel("file");
       let datachannel = await Peer.createChannel("data");
       let offer = await Peer.createOffer();
@@ -42,7 +43,7 @@ export default class TransferDialog extends Vue {
       }
       await Peer.connect();
       await filechannel.open();
-      this.status = "Pair connecté, en attente d'un fichier";
+      this.status = "connectedPeer";
       while (filechannel.dc.readyState === "open") {
         this.$emit("inputfile", await filechannel.read<FileInfo>());
       }
