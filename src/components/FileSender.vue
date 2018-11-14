@@ -19,7 +19,7 @@ import { codecBuffer, SpeedCounter, sizestr } from "@/utils";
 import InputFile from "@/components/InputFile.vue";
 
 @Component({
-  components: {InputFile}
+  components: { InputFile }
 })
 export default class FileSender extends Vue {
   @Prop()
@@ -33,16 +33,18 @@ export default class FileSender extends Vue {
   fileInfo: { name: string; size: number } | {} = {};
 
   async fileSelected(fileinput: HTMLInputElement) {
-    this.$emit('selection', fileinput.files);
-    if (!fileinput.files) return;
+    this.$emit("selection", fileinput.files);
+    if (!fileinput.files || fileinput.files.length == 0) return;
     let file = fileinput.files[0];
     this.fileInfo = { name: file.name, size: file.size };
     this.status = "Attente de connection du pair";
-    await Peer.setRemoteDescription(
-      await readMessage<RTCSessionDescriptionInit>()
-    );
-    await Peer.setSDP(await Peer.createAnswer());
-    await Peer.connect();
+    if (!Peer.connected) {
+      await Peer.setRemoteDescription(
+        await readMessage<RTCSessionDescriptionInit>()
+      );
+      await Peer.setSDP(await Peer.createAnswer());
+      await Peer.connect();
+    }
     this.status = "Pair connecté, envoi des informations de transfert";
     let filechannel = await Peer.waitDataChannel("file");
     let datachannel = await Peer.waitDataChannel("data");
@@ -92,9 +94,7 @@ input[type="file"] {
   outline: none;
 }
 
-input[type="file"]::-mo
-
-input[type="file"]::-webkit-file-upload-button {
+input[type="file"]::-mo input[type="file"]::-webkit-file-upload-button {
   color: #777;
   width: 100%;
   height: 100%;
