@@ -6,8 +6,10 @@ module.exports = {
   productionSourceMap: false,
 
   pwa: {
-    name: 'Dogars',
-    themeColor: '#bb0090'
+    name: 'WeebRTC',
+    themeColor: '#bb0090',
+    appleMobileWebAppCapable: 'yes',
+    appleMobileWebAppStatusBarStyle: 'black',  
   },
   pluginOptions: {
     webpackBundleAnalyzer: {
@@ -15,9 +17,6 @@ module.exports = {
     }
   },
   configureWebpack: {
-    resolve: {
-      modules: [__dirname + '/node_modules/vue-awesome']
-    },
     output: {
       filename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist')
