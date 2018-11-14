@@ -1,17 +1,17 @@
 import { peerConnectionConfig } from "@/config";
-import { sendMessage, info, CommandType } from "@/SignallingServer";
+import { sendMessage, info, CommandType, readMessage } from "@/SignallingServer";
 
 class FileTransferPeer {
     channels = new Map<string, RTCDataChannelWrapper>();
     channelsres = new Map<string, (v: RTCDataChannelWrapper) => void>();
     peer: RTCPeerConnection;
     connectres?: () => void;
+    connected = false;
 
     constructor(config: RTCConfiguration) {
         this.peer = new RTCPeerConnection(config);
 
         this.peer.ondatachannel = e => {
-            console.log('got channel');
             let dc = e.channel;
             let wr = new RTCDataChannelWrapper(dc);
             this.channels.set(dc.label, wr);
@@ -19,13 +19,19 @@ class FileTransferPeer {
             res && res(wr);
         };
 
+        this.peer.oniceconnectionstatechange = e => {
+            console.log(e);
+            if (this.peer.iceConnectionState == 'disconnected')
+                [...this.channels.values()].map(c => c.close());
+        };
+
         this.peer.onicecandidate = async e => {
-            console.log(e.candidate);
             if (!info.token)
                 throw new Error('token not set');
             await sendMessage(JSON.stringify([CommandType.Broadcast, info.token, JSON.stringify(e.candidate)]));
             if (!e.candidate) {
                 // await closeConnection();
+                this.connected = true;
                 this.connectres && this.connectres();
                 this.connectres = undefined;
             }
@@ -33,11 +39,12 @@ class FileTransferPeer {
     }
 
     connect() {
-        return new Promise(res => {
-            if (this.peer.connectionState === 'connected')
-                return res();
-            this.connectres = res;
-        });
+        return new Promise<void>(res => {
+            if (this.connected)
+                res();
+            else
+                this.connectres = res;
+        })
     }
 
     createChannel(name: string, dict?: RTCDataChannelInit) {
@@ -93,8 +100,8 @@ function jsonparse<T>(v: MessageEvent) {
 class RTCDataChannelWrapper {
     dc: RTCDataChannel;
     mq: MessageEvent[] = [];
-    readres?: (v: MessageEvent) => void;
-    openfun?: () => void;
+    readres?: [(v: MessageEvent) => void, (r?: any) => void];
+    openres?: [() => void, (r?: any) => void];
 
     constructor(dc: RTCDataChannel) {
         this.dc = dc;
@@ -102,22 +109,46 @@ class RTCDataChannelWrapper {
             if (!this.readres)
                 this.mq.push(m);
             else {
-                this.readres(m);
+                this.readres[0](m);
                 this.readres = undefined;
             }
         };
 
+        dc.onerror = dc.onclose = e => {
+            console.log(e);
+            this.readres && this.readres[1](e);
+            this.openres && this.openres[1](e);
+            this.readres = undefined;
+            this.openres = undefined;
+        };
+
         dc.onopen = () => {
-            this.openfun && this.openfun();
+            this.openres && this.openres[0]();
+            this.openres = undefined;
         };
     }
 
     open() {
-        return new Promise<void>(res => {
-            if (this.dc.readyState === 'open')
-                return res();
-            this.openfun = res;
+        return new Promise<void>((res, rej) => {
+            switch (this.dc.readyState) {
+                case 'open':
+                    return res();
+                case 'connecting':
+                    this.openres = [res, rej];
+                    break;
+                default:
+                    rej(this.dc.readyState);
+            }
         });
+    }
+
+    close() {
+        console.log('closing dc...');
+        this.dc.close();
+
+        // Chrom* ne lance pas l'évènement même si la connexion est perdue.
+        // https://bugs.chromium.org/p/webrtc/issues/detail?id=1676
+        this.dc.onclose && this.dc.onclose(new Event('close'));
     }
 
     // Typescript supporte mal l'inférence de type sur les fonctions
@@ -132,14 +163,14 @@ class RTCDataChannelWrapper {
     }
 
     rawRead() {
-        return new Promise<MessageEvent>(res => {
+        return new Promise<MessageEvent>((res, rej) => {
             if (this.mq.length > 0)
                 return res(this.mq.splice(0, 1)[0]);
-            this.readres = res;
+            this.readres = [res, rej];
         });
     }
 
-    async read<T>(transform: typeof jsonparse = jsonparse) {
+    async read<T>(transform = jsonparse) {
         return transform<T>(await this.rawRead());
     }
 }

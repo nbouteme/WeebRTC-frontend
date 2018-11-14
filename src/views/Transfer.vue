@@ -1,21 +1,26 @@
 <template>
 <div>
-  <TransferDialog @inputfile="onInputFileChange" :token="$route.params.tok"/>
-  <div v-if="info">
-    Accept? {{info.name}} ({{info.size}})
+  <TransferDialog @inputfile="onInputFileChange" @error="setError" :token="$route.params.tok"/>
+  <div v-if="info && !transfering">
+    Accept? {{info.name}} ({{sizestr(info.size)}})
       <input :v-model="key" v-if="info.isEncrypted" placeholder="00112233445566778899AABBCCDDEEFF00112233445566778899AABBCCDDEEFF">
       <input type="button" value="Yes" @click="startDownload">
       <input type="button" value="No" @click="refuseFile">
   </div>
+  <div v-else-if="transfering">
+    {{sizestr(downloaded)}} / {{sizestr(info.size)}} ({{sizestr(sc.speed)}}/s)
+  </div>
   <div v-else>
     En attente...
   </div>
+  <div v-if="error">{{error}}</div>
 </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import TransferDialog from "@/components/TransferDialog.vue";
+import { sizestr, codecBuffer, SpeedCounter } from "@/utils";
 
 import {
   sendMessage,
@@ -38,6 +43,10 @@ export default class Transfer extends Vue {
   info?: FileInfo | null = null;
   transfering: boolean = false;
   key: string = "";
+  downloaded: number = 0;
+  sc = new SpeedCounter();
+  sizestr = sizestr;
+  error: string = "";
 
   created() {
     info.token = this.$route.params.tok;
@@ -48,32 +57,13 @@ export default class Transfer extends Vue {
     this.info = data;
   }
 
-  async decryptBuffer(buff: ArrayBuffer) {
-    let keybuf = new Uint8Array(
-      [...Array(32)].map((e, i) =>
-        parseInt(this.key.slice(i * 2, i * 2 + 2), 16)
-      )
-    );
-
-    let key = await crypto.subtle.importKey(
-      "raw",
-      keybuf,
-      {
-        name: "AES-CBC",
-        length: 256
-      },
-      true,
-      ["decrypt"]
-    );
-    return crypto.subtle.decrypt("AES-CBC", key, buff);
-  }
-
   async startDownload() {
     if (!this.info) return;
     let filechannel = await Peer.waitDataChannel("file");
     filechannel.send("true");
     let datachannel = await Peer.waitDataChannel("data");
-    let remaining = this.info.size;
+    this.downloaded = 0;
+    this.transfering = true;
     let fileblob = new Blob([], { type: "application/octet-stream" });
     /*
       Chrome stocke les petits blobs dans la mémoire et les gros (~2GB en
@@ -84,23 +74,35 @@ export default class Transfer extends Vue {
       fichiers plus gros. Optimisation possible: Cumuler dans un blob tampon de
       16Mo avant de concaténer au blob fileblob, pour éviter les accès disque 
       trop fréquents dans l'éventualité où le blob est stocké sur disque
-     */
-    while (remaining > 0) {
-      let blob = await datachannel.read<ArrayBuffer>(e => e.data);
-      if (this.info.isEncrypted) blob = await this.decryptBuffer(blob);
-      remaining -= blob.byteLength;
-      // Peut-être une meilleur manière de faire qui évite la réallocation
-      fileblob = new Blob([fileblob, blob], {
-        type: "application/octet-stream"
-      });
+    */
+    try {
+      while (this.downloaded < this.info.size) {
+        let blob = await datachannel.read<ArrayBuffer>(e => e.data);
+        if (this.info.isEncrypted)
+          blob = await codecBuffer(blob, this.key, "decrypt");
+        this.downloaded += blob.byteLength;
+        this.sc.addMeasure(blob.byteLength);
+        // this.$emit("progress", this.remaining);
+        // Peut-être une meilleur manière de faire qui évite la réallocation
+        fileblob = new Blob([fileblob, blob], {
+          type: "application/octet-stream"
+        });
+      }
+      let url = URL.createObjectURL(fileblob);
+      let a = document.createElement("a");
+      a.href = url;
+      a.download = this.info.name;
+      a.click();
+      URL.revokeObjectURL(url);
+      a.remove();
+    } catch (e) {
+      this.setError(e);
+      //this.$emit('error', e);
     }
-    let url = URL.createObjectURL(fileblob);
-    let a = document.createElement("a");
-    a.href = url;
-    a.download = this.info.name;
-    a.click();
-    URL.revokeObjectURL(url);
-    a.remove();
+  }
+
+  setError(e: string) {
+    this.error = e;
   }
 
   async refuseFile() {

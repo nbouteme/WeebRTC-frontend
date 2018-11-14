@@ -1,7 +1,5 @@
 import { websockurl } from '@/config';
 
-export type Arguments<T> = T extends (...args: infer U) => any ? U : any;
-
 export let info: {
     token?: string
 } = {};
@@ -46,9 +44,8 @@ export let connectionOpened = () => new Promise<void>((res, rej) => {
     opened = res;
 });
 
-export let sendMessage = async(d: Arguments<WebSocket['send']>[0]) => {
+export let sendMessage = async(d: Parameters<WebSocket['send']>[0]) => {
     await connectionOpened();
-    console.log(d);
     ws.send(d);
 };
 

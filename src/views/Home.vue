@@ -2,7 +2,7 @@
     <div>
         <TransferOptions @update="updateOpts" :opts="opts"></TransferOptions>
         <TokenDisplay :long="opts.long"></TokenDisplay>
-        <FileSender :opts="opts"></FileSender>
+        <FileSender v-if="!opts.encrypted || validEnc(opts.key)" :opts="opts"></FileSender>
     </div>
 </template>
 
@@ -14,7 +14,7 @@ import FileSender from "@/components/FileSender.vue";
 
 export class TransferArgs {
     encrypted: boolean = false;
-    key?: string = '';
+    key: string = '';
     long: boolean = true;
 }
 
@@ -27,6 +27,11 @@ export class TransferArgs {
 })
 export default class Home extends Vue {
     opts: TransferArgs = new TransferArgs;
+
+    validEnc(k: string) {
+        k = k.toLowerCase();
+        return k.match(/^ *[0-9a-f]{64} *$/g);
+    }
 
     updateOpts(newval: TransferArgs) {
         this.opts = newval;    
