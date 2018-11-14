@@ -14,11 +14,11 @@ export default class InputFile extends Vue {
     let fileinput = this.$refs.fileinput as HTMLInputElement;
     let button = this.$refs.button as HTMLButtonElement;
     fileinput.onchange = e => {
-      if (!fileinput.files) button.textContent = "Select a file";
-      else {
+      if (!fileinput.files || fileinput.files.length == 0)
+        button.textContent = "Select a file";
+      else
         button.textContent = fileinput.files[0].name;
-        this.$emit('change', fileinput);
-      }
+      this.$emit('change', fileinput);
     };
 
     fileinput.ondragenter = e => {

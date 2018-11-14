@@ -12,15 +12,10 @@ export default class CheckBox extends Vue {
   @Prop()
   value!: boolean;
 
-  @Watch("value")
-  updateValue() {
-    this.$emit("input", this.value);
-  }
-
   mounted() {
     let root = this.$refs.root as HTMLDivElement;
     root.onclick = e => {
-      this.value = !this.value;
+      this.$emit("input", !this.value);
       root.classList.toggle("active", this.value);
     };
     root.classList.toggle("active", this.value);
