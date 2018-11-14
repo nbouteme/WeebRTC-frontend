@@ -1,6 +1,8 @@
 WeebRTC Frontend
 ================
 
+[Backend](https://github.com/nbouteme/WeebRTC)
+
 Partage de fichiers décentralisé sans stockage intermédiaire
 
 Installation
@@ -64,3 +66,20 @@ Dues aux limitations de WebRTC, les transferts de fichiers se font par blocs de 
 et sont cumulés dans la mémoire du navigateur, par manque de solutions de stockage facilement testable et cross-platform. L'application 
 n'impose pas de limite par elle même, elle n'avertira donc pas l'utilisateur si un fichier est trop gros pour être transféré de manière 
 fiable. La taille maximale recommandée est donc de 500Mo.
+
+Problèmes de sécurité
+---------------------
+
+Le frontend fait aucun efforts pour valider les informations envoyées par un autre pair.
+
+Le protocole d'échange se base sur un channel file et un channel data.
+Les données sur le channel file sont exclusivement de type boolean et FileInfo.
+
+Les boolean étant utilisé seulement dans des conditions, ils seront évalués selon la sémantique du langage, limitant leur utilité dans le cas d'un pair malveillant.
+
+Les données de type FileInfo par contre, sont utilisé tel quel pour de l'affichage sanitizé, mais ne peuvent contenir de code exécutable, réduisant l'utilité
+de l'exploiter en tant que vecteur d'attaque.
+
+Sur le channel data, les données échangées sont strictement des ArrayBuffer, utiliser un type de données incompatible est ininteressant comme vecteur d'attaque.
+
+En conclusion, l'exécution de code arbitraire est impossible, il reste une possibilité de faire afficher des informations invalides, mais impossible d'injecter des balises.
