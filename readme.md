@@ -5,6 +5,44 @@ WeebRTC Frontend
 
 Partage de fichiers décentralisé sans stockage intermédiaire
 
+Explication des choix
+---------------------
+
+Choix des technologies:
+ - Typescript
+	- Transpile vers ES5. 
+	- Fortement et statiquement typé, donc offrant des garanties fortes sur le fonctionnement d'une application tout au long de son développement
+- Vue.js
+	- Framework frontend, moins connu que Angular/React
+	- Simple d'utilisation, léger, sans opinion sur l'architecture de l'applicaion
+	- Permet de déployer une SPA et déployer une PWA
+
+Roadmap
+-------
+
+- [x] Serveur
+	- [x] Génération de jeton
+		- [x] Autoconnexion/Déconnexion
+	- [x] Gestion de la connexion aux salles
+		- [x] Autodéconnexion lors de la fermeture de session
+	- [x] Communication dans une salle
+	- [x] Service de fichiers statiques
+- [ ] Client
+	- [x] Echange de fichiers par WebRTC
+		- [x] Protocole de signalement
+		- [x] Échange de méta données
+		- [x] Envoi de données
+			- [x] Envoi non encrypté
+			- [x] Envoi encrypté
+		- [x] Réception de données
+			- [x] Réception de fichiers non encrypté
+			- [ ] Réception de fichiers encrypté
+	- [ ] Expérience utilisateur
+		- [x] Internationalization
+		- [ ] Gestion d'erreur
+		- [ ] Afficher/cacher des éléments selon l'étape dans le processus de partage
+		- [ ] Répétabilité de l'échange
+
 Installation
 ------------
 
