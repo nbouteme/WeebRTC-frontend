@@ -2,6 +2,7 @@ WeebRTC Frontend
 ================
 
 [Backend](https://github.com/nbouteme/WeebRTC)
+[Demo live](https://wrtc.kuriyama.moe)
 
 Partage de fichiers décentralisé sans stockage intermédiaire
 
