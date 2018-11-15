@@ -31,7 +31,7 @@ export default class TransferDialog extends Vue {
       let reply = await readMessage<RTCSessionDescriptionInit>();
       await Peer.setRemoteDescription(reply);
 
-      let nextCandidate = async function*() {
+      let nextCandidate = async function * () {
         let cand: RTCIceCandidate;
         do {
           cand = await readMessage<RTCIceCandidate>();

@@ -97,7 +97,7 @@ export default class Transfer extends Vue {
       a.remove();
     } catch (e) {
       this.setError(e);
-      //this.$emit('error', e);
+      // this.$emit('error', e);
     }
   }
 

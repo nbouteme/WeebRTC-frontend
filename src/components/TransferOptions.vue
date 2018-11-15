@@ -15,7 +15,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Provide, Watch } from "vue-property-decorator";
-import { TransferArgs } from "@/views/Home.vue";
 import CheckBox from "@/components/CheckBox.vue";
 
 @Component({

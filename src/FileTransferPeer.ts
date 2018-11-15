@@ -20,7 +20,6 @@ class FileTransferPeer {
         };
 
         this.peer.oniceconnectionstatechange = e => {
-            console.log(e);
             if (this.peer.iceConnectionState == 'disconnected')
                 [...this.channels.values()].map(c => c.close());
         };

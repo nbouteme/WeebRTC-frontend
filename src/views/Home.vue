@@ -10,42 +10,36 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
-import { FileInfo } from '@/views/Transfer.vue';
+import { FileInfo } from "@/views/Transfer.vue";
 
 import TransferOptions from "@/components/TransferOptions.vue";
 import TokenDisplay from "@/components/TokenDisplay.vue";
 import FileSender from "@/components/FileSender.vue";
 import OptionDisplay from "@/components/OptionDisplay.vue";
 
-export class TransferArgs {
-    encrypted: boolean = false;
-    key: string = '';
-    long: boolean = true;
-}
-
 @Component({
   components: {
     TransferOptions,
     FileSender,
     TokenDisplay,
-    OptionDisplay,
+    OptionDisplay
   }
 })
 export default class Home extends Vue {
-    opts: TransferArgs = new TransferArgs;
-    files: FileInfo | null = null;
+  opts: TransferArgs = { encrypted: false, key: "", long: true };
+  files: FileInfo | null = null;
 
-    handleSelect(files: FileInfo | null) {
-        this.files = files;
-    }
+  handleSelect(files: FileInfo | null) {
+    this.files = files;
+  }
 
-    validEnc(k: string) {
-        k = k.toLowerCase();
-        return k.match(/^ *[0-9a-f]{64} *$/g);
-    }
+  validEnc(k: string) {
+    k = k.toLowerCase();
+    return k.match(/^ *[0-9a-f]{64} *$/g);
+  }
 
-    updateOpts(newval: TransferArgs) {
-        this.opts = newval;    
-    }
+  updateOpts(newval: TransferArgs) {
+    this.opts = newval;
+  }
 }
 </script>

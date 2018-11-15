@@ -66,4 +66,4 @@ export const messages = {
       error: 'YEEART'
     }
   }
-}
+};

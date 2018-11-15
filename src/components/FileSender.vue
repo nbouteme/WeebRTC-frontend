@@ -12,7 +12,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Provide, Watch } from "vue-property-decorator";
-import { TransferArgs } from "@/views/Home.vue";
 import { sendMessage, CommandType, readMessage } from "@/SignallingServer";
 import { Peer } from "@/FileTransferPeer";
 import { codecBuffer, SpeedCounter, sizestr } from "@/utils";
@@ -35,7 +34,7 @@ export default class FileSender extends Vue {
 
   async fileSelected(fileinput: HTMLInputElement) {
     this.$emit("selection", fileinput.files);
-    if (!fileinput.files || fileinput.files.length == 0) return;
+    if (!fileinput.files || fileinput.files.length === 0) return;
     let file = fileinput.files[0];
     this.fileInfo = { name: file.name, size: file.size };
     this.status = "waiting";

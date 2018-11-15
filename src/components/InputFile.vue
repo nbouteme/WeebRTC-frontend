@@ -14,7 +14,7 @@ export default class InputFile extends Vue {
     let fileinput = this.$refs.fileinput as HTMLInputElement;
     let button = this.$refs.button as HTMLButtonElement;
     fileinput.onchange = e => {
-      if (!fileinput.files || fileinput.files.length == 0)
+      if (!fileinput.files || fileinput.files.length === 0)
         button.textContent = this.$t("message.select").toString();
       else
         button.textContent = fileinput.files[0].name;

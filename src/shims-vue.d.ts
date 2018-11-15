@@ -3,14 +3,10 @@ declare module '*.vue' {
   export default Vue;
 }
 
-declare let REMOTE: string;
-declare let PROD: string;
-declare let VERSION: string;
-declare let COMMIT: string;
-declare let COMMITS: {
-  date: string,
-  commit: string,
-  subject: string,
-  message: string
-}[];
+declare let BUILD: 'development' | 'production' | undefined;
 
+declare type TransferArgs = {
+  encrypted: boolean;
+  key: string;
+  long: boolean;
+}
