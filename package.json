@@ -53,7 +53,9 @@
       "no-trailing-spaces": "off",
       "indent": "off",
       "curly": "off",
-      "promise/param-names": "off"
+      "promise/param-names": "off",
+      "generator-star-spacing": "off",
+      "eqeqeq": "off"
     }
   },
   "postcss": {
