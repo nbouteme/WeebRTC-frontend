@@ -1,14 +1,14 @@
 <template>
     <div>
         <CheckBox v-model="opts.long">
-          Use long tokens
+          {{$t('message.longtoken')}}
         </CheckBox>
         <CheckBox v-model="opts.encrypted">
-          Add AES Encryption
+          {{$t('message.enableaes')}}
         </CheckBox>
         <div v-if="opts.encrypted">
             <input v-model="opts.key" placeholder="64 hex digits AESCBC key...">
-            <input @click="genKey" type="button" value="Give me a random key">
+            <input @click="genKey" type="button" :value="$t('message.randkey')">
         </div>
     </div>
 </template>
