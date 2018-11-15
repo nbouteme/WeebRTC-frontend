@@ -15,4 +15,4 @@ export let peerConnectionConfig: RTCConfiguration = {
 if (BUILD === 'development')
     peerConnectionConfig.iceServers!.unshift({ urls: 'stun:localhost:3478' });
 
-export let websockurl = `ws://${location.hostname}`;
+export let websockurl = `ws${location.protocol == 'https:' ? 's' : ''}://${location.hostname}`;
