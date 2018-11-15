@@ -21,7 +21,11 @@ export const messages = {
       connectedPeer: "Connecté au pair, en attente d'un fichier...",
 
       accept: 'Accepter ?',
-      waitingtransfer: 'En attente...'
+      waitingtransfer: 'En attente...',
+
+      longtoken: 'Long jetons',
+      enableaes: 'Activer Encryption AES',
+      randkey: 'Donne moi une clé'
     } 
   },
   en: {
@@ -47,19 +51,18 @@ export const messages = {
       connectedPeer: 'Connected to peer, waiting for file...',
 
       accept: 'Accept?',
-      waitingtransfer: 'Waiting...'
+      waitingtransfer: 'Waiting...',
+
+      longtoken: 'Use long tokens',
+      enableaes: 'Add AES Encryption',
+      randkey: 'Give me a random key'
     }
   },
   ja: {
     message: {
       head: 'どうも',
       sub: 'ニンジャスレイヤーです',
-      waiting: 'Waiting for peer connection...',
-      sendingmeta: 'Peer connected, sending file metadata...',
-      waitingack: "Peer connected, waiting for response...",
-      fileselect: 'Waiting for file selection...',
       filerefused: 'だが断る!',
-      transfering: 'Transfering file...',
       error: 'YEEART'
     }
   }
