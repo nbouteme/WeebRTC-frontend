@@ -21,7 +21,7 @@ Roadmap
 -------
 
 - [x] Serveur
-	- [x] Génération de jeton
+	- [x] Génération de jetons
 		- [x] Autoconnexion/Déconnexion
 	- [x] Gestion de la connexion aux salles
 		- [x] Autodéconnexion lors de la fermeture de session
@@ -40,8 +40,16 @@ Roadmap
 	- [ ] Expérience utilisateur
 		- [x] Internationalization
 		- [ ] Gestion d'erreur
+			- [ ] Afficher une erreur si l'envoyeur ferme la connexion à n'importe quel point
+			- [x] Afficher une erreur si l'envoyer ferme la connexion durant le transfert
+			- [ ] Afficher une erreur si le receveur ferme la connexion à n'importe quel point
 		- [ ] Afficher/cacher des éléments selon l'étape dans le processus de partage
+			- [x] Cacher l'entrée fichier si encryption séléctionnée et clé non valide
+			- [x] Empêcher de modifier les options de transferts quand un fichier est selectionné
+			- [ ] Empêcher d'accepter un fichier tant qu'une clé valide n'a pas été entrée
+			- [ ] Empêcher l'envoyeur de changer le fichier jusqu'à la fin du transfert
 		- [ ] Répétabilité de l'échange
+			- [x] Permettre de proposer un autre fichier en cas de refus
 
 Installation
 ------------
