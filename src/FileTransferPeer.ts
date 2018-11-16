@@ -43,7 +43,7 @@ class FileTransferPeer {
                 res();
             else
                 this.connectres = res;
-        })
+        });
     }
 
     createChannel(name: string, dict?: RTCDataChannelInit) {

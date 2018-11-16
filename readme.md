@@ -29,13 +29,13 @@ Roadmap
 	- [x] Communication dans une salle
 	- [x] Service de fichiers statiques
 - [ ] Client
-	- [x] Echange de fichiers par WebRTC
+	- [ ] Echange de fichiers par WebRTC
 		- [x] Protocole de signalement
 		- [x] Échange de méta données
 		- [x] Envoi de données
 			- [x] Envoi non encrypté
 			- [x] Envoi encrypté
-		- [x] Réception de données
+		- [ ] Réception de données
 			- [x] Réception de fichiers non encrypté
 			- [ ] Réception de fichiers encrypté
 	- [ ] Expérience utilisateur
@@ -51,6 +51,7 @@ Roadmap
 			- [ ] Empêcher l'envoyeur de changer le fichier jusqu'à la fin du transfert
 		- [ ] Répétabilité de l'échange
 			- [x] Permettre de proposer un autre fichier en cas de refus
+			- [ ] Permettre de proposer un autre fichier après un transfert réussi
 
 Installation
 ------------
@@ -92,9 +93,9 @@ Après la phase d'initialisation, S est libre de fermer la websocket. Le code ac
 clients des qu'ils sont en relation l'un avec l'autre.
 
 Les deux parties sont prévenues lorsque elles sont connectées ensemble.
-~~Si R ou S utilise un service TURN, un message d'avertissement est affiché pour les deux parties.~~ Impossible sans l'intervention du service TURN.
+~~Si R ou S utilise un service TURN, un message d'avertissement est affiché pour les deux parties.~~ ~Impossible sans l'intervention du service TURN.~ Pourrait être possible, en regardant si le candidat est environ de type "relay" ("relayed" sur Firefox), mais nécessite une compréhension plus approfondie de ICE pour être plus précis dans la détection.
 
-Lorsque S dépose un fichier, R est avertie avec le nom du fichier et sa taille.
+Lorsque S dépose un fichier, R est averti avec le nom du fichier et sa taille.
 Si S a activé l'encryption, il est demandé à R d'entrer une clé. Si la clé est mauvaise, le fichier résultant sera incorrect.
 
 Si R valide le fichier, le téléchargement commence. Voir section Téléchargement.

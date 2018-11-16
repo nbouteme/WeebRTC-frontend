@@ -42,7 +42,6 @@ div.active {
   background-color: rgba(100, 250, 100, 0.5);
 }
 
-
 div.active:hover {
   border: 5px dashed lightgrey;
 }
