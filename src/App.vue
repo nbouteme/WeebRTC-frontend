@@ -28,13 +28,19 @@ export default class App extends Vue {}
   margin: 0 auto 0 auto;
 }
 
+@media screen and (orientation: portrait) and (max-width: 480px) {
+  #app {
+    width: 100%;
+  }
+}
+
 body {
   background-image: url("/img/bg.png");
   margin: 40px auto;
   line-height: 1.6;
-  font-size: 18px;
+  font-size: 1.1rem;
   color: #444;
-  padding: 0 10px;
+  padding: 0;
 }
 
 #content {
