@@ -52,9 +52,9 @@ export default class TokenDisplay extends Vue {
 
 .root > *:nth-child(1) {
   border: 1px solid green;
-  padding: 5px;
-  border-top-left-radius: 7px;
-  border-bottom-left-radius: 7px;
+  padding: 0.2em;
+  border-top-left-radius: 0.25em;
+  border-bottom-left-radius: 0.25em;
   background-color: #38ed38;
   color: white;
 }
@@ -69,7 +69,7 @@ export default class TokenDisplay extends Vue {
   text-decoration: none;
   color: green;
   border: 1px solid green;
-  padding: 5px;
+  padding: 0.2em;
   border-left: none;
   background-color: rgba(255, 255, 255, 0.3);
   font-size: 1em;
@@ -79,11 +79,11 @@ export default class TokenDisplay extends Vue {
   border: 1px solid green;
   background-color: lightgreen;
   color: green;
-  padding: 5px;
+  padding: 0.2em;
   outline: none;
   font-size: 1em;
   border-left: none;
-  border-bottom-right-radius: 7px;
-  border-top-right-radius: 7px;
+  border-bottom-right-radius: 0.25em;
+  border-top-right-radius: 0.25em;
 }
 </style>

@@ -3,12 +3,13 @@
   <TransferDialog @inputfile="onInputFileChange" @error="setError" :token="$route.params.tok"/>
   <div v-if="info && !transfering">
     {{$t('message.accept')}} {{info.name}} ({{sizestr(info.size)}})
-      <input :v-model="key" v-if="info.isEncrypted" placeholder="00112233445566778899AABBCCDDEEFF00112233445566778899AABBCCDDEEFF">
-      <input type="button" value="Yes" @click="startDownload">
+      <input v-model="key" v-show="info.isEncrypted" placeholder="00112233445566778899AABBCCDDEEFF00112233445566778899AABBCCDDEEFF">
+      <input :disabled="info.isEncrypted && !validEnc(key)" type="button" value="Yes" @click="startDownload">
       <input type="button" value="No" @click="refuseFile">
   </div>
   <div v-else-if="transfering">
     {{sizestr(downloaded)}} / {{sizestr(info.size)}} ({{sizestr(sc.speed)}}/s)
+    <ProgressBar :value="downloaded" :max="info.size"/>
   </div>
   <div v-else>
     {{$t('message.waitingtransfer')}}
@@ -18,9 +19,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import TransferDialog from "@/components/TransferDialog.vue";
-import { sizestr, codecBuffer, SpeedCounter } from "@/utils";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { sizestr, codecBuffer, SpeedCounter, validEnc } from "@/utils";
 
 import {
   sendMessage,
@@ -30,6 +30,9 @@ import {
 } from "@/SignallingServer";
 import { Peer } from "@/FileTransferPeer";
 
+import TransferDialog from "@/components/TransferDialog.vue";
+import ProgressBar from "@/components/ProgressBar.vue";
+
 export interface FileInfo {
   isEncrypted: boolean;
   name: string;
@@ -37,7 +40,7 @@ export interface FileInfo {
 }
 
 @Component({
-  components: { TransferDialog }
+  components: { TransferDialog, ProgressBar }
 })
 export default class Transfer extends Vue {
   info?: FileInfo | null = null;
@@ -47,6 +50,7 @@ export default class Transfer extends Vue {
   sc = new SpeedCounter();
   sizestr = sizestr;
   error: string = "";
+  validEnc = validEnc;
 
   created() {
     info.token = this.$route.params.tok;
@@ -55,6 +59,7 @@ export default class Transfer extends Vue {
   onInputFileChange(data: FileInfo) {
     if (this.transfering) return;
     this.info = data;
+    console.log(data);
   }
 
   async startDownload() {
@@ -102,6 +107,7 @@ export default class Transfer extends Vue {
   }
 
   setError(e: string) {
+    console.error(e);
     this.error = e;
   }
 

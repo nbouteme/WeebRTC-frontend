@@ -1,4 +1,4 @@
-export const messages = {
+export const messages: {[k in string]: any} = {
   fr: {
     message: {
       head: 'Salut !',
@@ -67,3 +67,5 @@ export const messages = {
     }
   }
 };
+
+messages["en-US"] = messages.en;

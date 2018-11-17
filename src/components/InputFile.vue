@@ -42,12 +42,12 @@ div {
 }
 
 button {
-  border: 5px dotted rgba(0, 0, 0, 0.12);
+  border: 0.2em dotted rgba(0, 0, 0, 0.12);
   color: gray;
   background-color: rgba(0, 0, 0, 0.06);
   padding: 8px 20px;
-  border-radius: 10px;
-  font-size: 20px;
+  border-radius: 0.4em;
+  font-size: 2em;
   font-weight: bold;
 }
 

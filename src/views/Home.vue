@@ -16,6 +16,7 @@ import TransferOptions from "@/components/TransferOptions.vue";
 import TokenDisplay from "@/components/TokenDisplay.vue";
 import FileSender from "@/components/FileSender.vue";
 import OptionDisplay from "@/components/OptionDisplay.vue";
+import { validEnc } from '@/utils';
 
 @Component({
   components: {
@@ -28,14 +29,10 @@ import OptionDisplay from "@/components/OptionDisplay.vue";
 export default class Home extends Vue {
   opts: TransferArgs = { encrypted: false, key: "", long: true };
   files: FileInfo | null = null;
+  validEnc = validEnc;
 
   handleSelect(files: FileInfo | null) {
     this.files = files;
-  }
-
-  validEnc(k: string) {
-    k = k.toLowerCase();
-    return k.match(/^ *[0-9a-f]{64} *$/g);
   }
 
   updateOpts(newval: TransferArgs) {

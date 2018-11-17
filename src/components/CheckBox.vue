@@ -15,21 +15,24 @@ export default class CheckBox extends Vue {
   mounted() {
     let root = this.$refs.root as HTMLDivElement;
     root.onclick = e => {
+      console.log(this.value);
       this.$emit("input", !this.value);
-      root.classList.toggle("active", this.value);
+      if (!this.value) root.classList.add("active");
+      else root.classList.remove("active");
+      console.log(this.value);
     };
-    root.classList.toggle("active", this.value);
+    if (this.value) root.classList.add("active");
   }
 }
 </script>
 
 <style scoped>
 div {
-  border: 5px dashed lightgrey;
+  border: 0.2em dashed lightgrey;
   display: inline-block;
-  margin: 10px;
-  padding: 5px;
-  border-radius: 10px;
+  margin: 0.4em;
+  padding: 0.2em;
+  border-radius: 0.4em;
   background-color: rgba(250, 250, 250, 0.2);
 }
 
@@ -38,12 +41,11 @@ div:hover {
 }
 
 div.active {
-  border: 5px dashed lightgreen;
+  border: 0.2em dashed lightgreen;
   background-color: rgba(100, 250, 100, 0.5);
 }
 
 div.active:hover {
-  border: 5px dashed lightgrey;
+  border: 0.2em dashed lightgrey;
 }
-
 </style>

@@ -71,3 +71,8 @@ export class SpeedCounter {
             this.speed -= this.measures.shift()!.transfered;
     }
 }
+
+export function validEnc(k: string) {
+  k = k.toLowerCase();
+  return k.match(/^ *[0-9a-f]{64} *$/g);
+}

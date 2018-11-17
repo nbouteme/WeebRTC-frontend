@@ -6,6 +6,7 @@
       </div>
       <div v-else>
         {{sizestr(transfered)}} / {{sizestr(fileInfo.size)}} ({{sizestr(sc.speed)}}/s)
+        <ProgressBar :value="transfered" :max="fileInfo.size"/>
       </div>
     </div>
 </template>
@@ -15,11 +16,14 @@ import { Component, Prop, Vue, Provide, Watch } from "vue-property-decorator";
 import { sendMessage, CommandType, readMessage } from "@/SignallingServer";
 import { Peer } from "@/FileTransferPeer";
 import { codecBuffer, SpeedCounter, sizestr } from "@/utils";
-import InputFile from "@/components/InputFile.vue";
 import { messages } from '@/localization';
+import { FileInfo } from '@/views/Transfer.vue';
+
+import InputFile from "@/components/InputFile.vue";
+import ProgressBar from "@/components/ProgressBar.vue";
 
 @Component({
-  components: { InputFile }
+  components: { InputFile, ProgressBar }
 })
 export default class FileSender extends Vue {
   @Prop()
@@ -28,7 +32,7 @@ export default class FileSender extends Vue {
   transfered: number = 0;
   sc = new SpeedCounter();
   sizestr = sizestr;
-  status: keyof typeof messages['fr']['message'] = "fileselect";
+  status: keyof typeof messages['en']['message'] = "fileselect";
 
   fileInfo: { name: string; size: number } | {} = {};
 
@@ -50,10 +54,10 @@ export default class FileSender extends Vue {
     let datachannel = await Peer.waitDataChannel("data");
     let mess = await filechannel.send(
       JSON.stringify({
-        isEncryped: this.opts.encrypted,
+        isEncrypted: this.opts.encrypted,
         name: file.name,
         size: file.size
-      })
+      } as FileInfo)
     );
     this.status = "waitingack";
     let ack = await filechannel.read<boolean>();
@@ -87,10 +91,10 @@ export default class FileSender extends Vue {
 
 <style scoped>
 input[type="file"] {
-  height: 50px;
-  border: 5px dotted rgb(255, 255, 255, 0.5);
+  height: 2em;
+  border: 0.2em dotted rgb(255, 255, 255, 0.5);
   background-color: rgba(0, 0, 0, 0.05);
-  padding: 10px;
+  padding: 0.4em;
   outline: none;
 }
 
