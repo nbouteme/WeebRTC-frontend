@@ -7,16 +7,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import {
-  readMessage,
-  sendMessage,
-  closeConnection,
-  CommandType,
-  info,
-  connectionOpened
-} from "../SignallingServer";
-import { FileInfo } from '@/views/Transfer.vue';
+import { Component, Prop, Vue } from "vue-property-decorator";
 import CopyableText from "@/components/CopyableText.vue";
 
 @Component({

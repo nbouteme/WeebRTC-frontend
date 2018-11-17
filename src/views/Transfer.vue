@@ -22,12 +22,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { sizestr, codecBuffer, SpeedCounter, validEnc } from "@/utils";
 
-import {
-  sendMessage,
-  info,
-  CommandType,
-  readMessage
-} from "@/SignallingServer";
+import { info } from "@/SignallingServer";
 import { Peer } from "@/FileTransferPeer";
 
 import TransferDialog from "@/components/TransferDialog.vue";

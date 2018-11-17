@@ -12,8 +12,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Provide, Watch } from "vue-property-decorator";
-import { sendMessage, CommandType, readMessage } from "@/SignallingServer";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { readMessage } from "@/SignallingServer";
 import { Peer } from "@/FileTransferPeer";
 import { codecBuffer, SpeedCounter, sizestr } from "@/utils";
 import { messages } from '@/localization';

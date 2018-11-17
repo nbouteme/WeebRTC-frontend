@@ -11,11 +11,10 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import {
   readMessage,
   sendMessage,
-  closeConnection,
   CommandType,
   info,
-  connectionOpened
 } from "../SignallingServer";
+
 import CopyableText from "@/components/CopyableText.vue";
 
 @Component({
