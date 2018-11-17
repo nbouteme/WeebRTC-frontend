@@ -29,15 +29,15 @@ Roadmap
 	- [x] Communication dans une salle
 	- [x] Service de fichiers statiques
 - [ ] Client
-	- [ ] Echange de fichiers par WebRTC
+	- [x] Échange de fichiers par WebRTC
 		- [x] Protocole de signalement
 		- [x] Échange de méta données
 		- [x] Envoi de données
 			- [x] Envoi non encrypté
 			- [x] Envoi encrypté
-		- [ ] Réception de données
+		- [x] Réception de données
 			- [x] Réception de fichiers non encrypté
-			- [ ] Réception de fichiers encrypté
+			- [x] Réception de fichiers encrypté
 	- [ ] Expérience utilisateur
 		- [x] Internationalization
 		- [ ] Gestion d'erreur
@@ -47,7 +47,7 @@ Roadmap
 		- [ ] Afficher/cacher des éléments selon l'étape dans le processus de partage
 			- [x] Cacher l'entrée fichier si encryption séléctionnée et clé non valide
 			- [x] Empêcher de modifier les options de transferts quand un fichier est selectionné
-			- [ ] Empêcher d'accepter un fichier tant qu'une clé valide n'a pas été entrée
+			- [x] Empêcher d'accepter un fichier tant qu'une clé valide n'a pas été entrée
 			- [ ] Empêcher l'envoyeur de changer le fichier jusqu'à la fin du transfert
 		- [ ] Répétabilité de l'échange
 			- [x] Permettre de proposer un autre fichier en cas de refus
