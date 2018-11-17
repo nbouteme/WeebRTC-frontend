@@ -12,7 +12,7 @@ import {
   readMessage,
   sendMessage,
   CommandType,
-  info,
+  info
 } from "../SignallingServer";
 
 import CopyableText from "@/components/CopyableText.vue";
@@ -32,15 +32,12 @@ export default class TokenDisplay extends Vue {
     await sendMessage(JSON.stringify([CommandType.RequestToken, this.long]));
     info.token = await readMessage<typeof info["token"]>();
     this.token = info.token;
-    console.log(this.token);
   }
 
   async mounted() {
     this.myorigin = location.origin;
+    this.token = this.$t("message.gentoken").toString();
     await this.refreshToken();
   }
 }
 </script>
-
-<style scoped>
-</style>

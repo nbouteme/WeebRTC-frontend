@@ -34,9 +34,15 @@ export default class TokenDisplay extends Vue {
 </script>
 
 <style scoped>
+.root {
+  display: inline-grid;
+  grid-template-columns: min-content minmax(0, 100vw) min-content;
+  text-align: center;
+  margin: 0.2em 0 0.2em 0;
+}
+
 .root > * {
   display: inline-block;
-  max-width: 300px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

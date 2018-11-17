@@ -25,7 +25,9 @@ export const messages: {[k in string]: any} = {
 
       longtoken: 'Long jetons',
       enableaes: 'Activer Encryption AES',
-      randkey: 'Donne moi une clé'
+      randkey: 'Donne moi une clé',
+
+      gentoken: 'Récupération du jeton...'
     } 
   },
   en: {
@@ -55,7 +57,9 @@ export const messages: {[k in string]: any} = {
 
       longtoken: 'Use long tokens',
       enableaes: 'Add AES Encryption',
-      randkey: 'Give me a random key'
+      randkey: 'Give me a random key',
+
+      gentoken: 'Generating token...'
     }
   },
   ja: {

@@ -39,16 +39,20 @@ div {
   position: relative;
   overflow: hidden;
   display: inline-block;
+  width: 100%;
 }
 
 button {
   border: 0.2em dotted rgba(0, 0, 0, 0.12);
   color: gray;
   background-color: rgba(0, 0, 0, 0.06);
-  padding: 8px 20px;
+  padding: 0.4em;
   border-radius: 0.4em;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 2em;
   font-weight: bold;
+  width: 100%;
 }
 
 button.dropping {

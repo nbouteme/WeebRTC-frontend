@@ -23,6 +23,8 @@ export default class App extends Vue {}
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css?family=Itim");
+
 #app {
   width: 420px;
   margin: 0 auto 0 auto;
@@ -38,9 +40,10 @@ body {
   background-image: url("/img/bg.png");
   margin: 40px auto;
   line-height: 1.6;
-  font-size: 1.1rem;
+  font-size: 1.4em;
   color: #444;
   padding: 0;
+  font-family: Itim;
 }
 
 #content {

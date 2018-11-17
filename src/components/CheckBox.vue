@@ -27,11 +27,15 @@ export default class CheckBox extends Vue {
 </script>
 
 <style scoped>
+div:last-child {
+  float: right;
+}
+
 div {
   border: 0.2em dashed lightgrey;
   display: inline-block;
-  margin: 0.4em;
-  padding: 0.2em;
+  margin: 0 0 1em 0;
+  padding: 0.4em 0.5em;
   border-radius: 0.4em;
   background-color: rgba(250, 250, 250, 0.2);
 }
