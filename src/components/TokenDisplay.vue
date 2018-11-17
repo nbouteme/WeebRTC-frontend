@@ -1,7 +1,7 @@
 <template>
   <CopyableText>
     <label slot="name">{{$t('message.token')}}</label>
-    <span slot="hidden">{{myorigin}}/</span>
+    <span slot="hidden">{{myorigin}}/{{token}}</span>
     <router-link slot="content" :to="token">{{token}}</router-link>
   </CopyableText>
 </template>

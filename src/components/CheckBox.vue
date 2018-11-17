@@ -32,10 +32,10 @@ div:last-child {
 }
 
 div {
-  border: 0.2em dashed lightgrey;
+  border: 0.1em dashed lightgrey;
   display: inline-block;
   margin: 0 0 1em 0;
-  padding: 0.4em 0.5em;
+  padding: 0.4em 0;
   border-radius: 0.4em;
   background-color: rgba(250, 250, 250, 0.2);
 }
@@ -45,11 +45,11 @@ div:hover {
 }
 
 div.active {
-  border: 0.2em dashed lightgreen;
+  border: 0.1em dashed lightgreen;
   background-color: rgba(100, 250, 100, 0.5);
 }
 
 div.active:hover {
-  border: 0.2em dashed lightgrey;
+  border: 0.1em dashed lightgrey;
 }
 </style>

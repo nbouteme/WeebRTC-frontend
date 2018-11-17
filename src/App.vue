@@ -48,6 +48,7 @@ body {
 
 #content {
   text-align: center;
+  padding: 0 3px 0 3px;
 }
 
 h1,

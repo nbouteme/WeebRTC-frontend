@@ -20,9 +20,15 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { sizestr, codecBuffer, SpeedCounter, validEnc } from "@/utils";
+import {
+  sizestr,
+  codecBuffer,
+  SpeedCounter,
+  validEnc,
+  saveBlobAsFile
+} from "@/utils";
 
-import { info } from "@/SignallingServer";
+import { info, sendMessage } from "@/SignallingServer";
 import { Peer } from "@/FileTransferPeer";
 
 import TransferDialog from "@/components/TransferDialog.vue";
@@ -75,6 +81,7 @@ export default class Transfer extends Vue {
       16Mo avant de concaténer au blob fileblob, pour éviter les accès disque 
       trop fréquents dans l'éventualité où le blob est stocké sur disque
     */
+
     try {
       while (this.downloaded < this.info.size) {
         let blob = await datachannel.read<ArrayBuffer>(e => e.data);
@@ -88,13 +95,7 @@ export default class Transfer extends Vue {
           type: "application/octet-stream"
         });
       }
-      let url = URL.createObjectURL(fileblob);
-      let a = document.createElement("a");
-      a.href = url;
-      a.download = this.info.name;
-      a.click();
-      URL.revokeObjectURL(url);
-      a.remove();
+      saveBlobAsFile(this.info.name, fileblob);
     } catch (e) {
       this.setError(e);
       // this.$emit('error', e);

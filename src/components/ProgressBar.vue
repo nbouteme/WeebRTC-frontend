@@ -28,7 +28,7 @@ div {
 }
 
 .bg {
-  width: 100%;
+  width: calc(100% - 10px);
   height: 10px;
   background-color: lightgray;
   padding: 4px;

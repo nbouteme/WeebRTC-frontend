@@ -23,7 +23,7 @@ export default class TokenDisplay extends Vue {
       let begin = this.$vnode!.elm!.childNodes[1] as HTMLLinkElement;
       let range = document.createRange();
       range.setStart(begin, 0);
-      range.setEnd(copy, 0);
+      range.setEnd(begin, 1);
       sel.removeAllRanges();
       sel.addRange(range);
       document.execCommand("copy");

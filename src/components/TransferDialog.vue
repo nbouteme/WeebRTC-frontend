@@ -10,6 +10,7 @@ import { sendMessage, CommandType, readMessage } from "@/SignallingServer";
 import { Peer } from "@/FileTransferPeer";
 import { FileInfo } from "@/views/Transfer.vue";
 import { messages } from '@/localization';
+import { setTimeout } from 'timers';
 
 @Component
 export default class TransferDialog extends Vue {

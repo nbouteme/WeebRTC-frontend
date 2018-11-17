@@ -1,4 +1,3 @@
-
 let iv = new Uint8Array([112, 170, 231, 137, 62, 41, 21, 216, 180, 114, 195, 56, 74, 50, 2, 190]);
 
 export let sizestr = (n: number) => {
@@ -75,4 +74,14 @@ export class SpeedCounter {
 export function validEnc(k: string) {
   k = k.toLowerCase();
   return k.match(/^ *[0-9a-f]{64} *$/g);
-}
+};
+
+export function saveBlobAsFile(name: string, data: Blob) {
+    let url = URL.createObjectURL(data);
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(url);
+    a.remove();
+};

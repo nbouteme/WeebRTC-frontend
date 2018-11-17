@@ -71,16 +71,19 @@ export default class FileSender extends Vue {
       await datachannel.open();
       try {
         while (remaining > 0) {
-          let chunk = file.slice(this.transfered, this.transfered + 65535);
+          // 16k pour éviter des problèmes de compatibilité cross-browser
+          let chunk = file.slice(this.transfered, this.transfered + 0x10000);
           this.transfered += chunk.size;
           remaining -= chunk.size;
           let buff = await new Response(chunk).arrayBuffer();
           if (this.opts.encrypted)
             buff = await codecBuffer(buff, this.opts.key!, "encrypt");
           await datachannel.send(buff);
+          await datachannel.flush();
           this.sc.addMeasure(buff.byteLength);
         }
       } catch (e) {
+        console.log(e);
         this.status = "error";
       }
     }

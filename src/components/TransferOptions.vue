@@ -38,8 +38,14 @@ export default class TransferOption extends Vue {
     let bytes = await crypto.subtle.exportKey("raw", key);
     let tbytes = new Uint8Array(bytes);
     this.opts.key = Array.from(tbytes)
-      .map(v => (v < 16 ? '0' : '') + v.toString(16))
+      .map(v => (v < 16 ? "0" : "") + v.toString(16))
       .join("");
   }
 }
 </script>
+
+<style scoped>
+div {
+  text-align: left;
+}
+</style>

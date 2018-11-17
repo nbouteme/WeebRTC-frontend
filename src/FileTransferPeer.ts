@@ -1,6 +1,8 @@
 import { peerConnectionConfig } from "@/config";
 import { sendMessage, info, CommandType, readMessage } from "@/SignallingServer";
 
+let nextFrame = () => new Promise<void>(r => requestAnimationFrame(e => r()));
+
 class FileTransferPeer {
     channels = new Map<string, RTCDataChannelWrapper>();
     channelsres = new Map<string, (v: RTCDataChannelWrapper) => void>();
@@ -20,6 +22,7 @@ class FileTransferPeer {
         };
 
         this.peer.oniceconnectionstatechange = e => {
+            console.error(e);
             if (this.peer.iceConnectionState == 'disconnected')
                 [...this.channels.values()].map(c => c.close());
         };
@@ -114,7 +117,7 @@ class RTCDataChannelWrapper {
         };
 
         dc.onerror = dc.onclose = e => {
-            console.log(e);
+            console.error(e);
             this.readres && this.readres[1](e);
             this.openres && this.openres[1](e);
             this.readres = undefined;
@@ -159,6 +162,21 @@ class RTCDataChannelWrapper {
     async send(data: string | ArrayBuffer | ArrayBufferView) {
         await this.open();
         this.dc.send(data as any);
+    }
+
+    /*
+        Dans le cas d'échanges de gros fichiers, des packets risquent
+        de s'accumuler dans le tampon de sortie.
+        À partir de 16Mo, sous Chrome, la datachannel est immediatement fermée:
+        https://bugs.chromium.org/p/webrtc/issues/detail?id=2866#c34
+    */
+    async flush() {
+        // onbufferedamountlow n'est jamais émit sur chrome
+        // https://bugs.chromium.org/p/chromium/issues/detail?id=582085
+        // Donc on ne peut pas compter dessus.
+        if (this.dc.bufferedAmount > 0x800000)
+            while (this.dc.bufferedAmount > 0x4000)
+                await nextFrame();
     }
 
     rawRead() {

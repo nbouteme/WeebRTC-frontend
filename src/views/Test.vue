@@ -7,7 +7,11 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import ProgressBar from "@/components/ProgressBar.vue";
+import { saveBlobAsFile } from '@/utils';
 
 @Component({ components: { ProgressBar } })
-export default class Test extends Vue {}
+export default class Test extends Vue {
+  mounted() {
+  }
+}
 </script>
