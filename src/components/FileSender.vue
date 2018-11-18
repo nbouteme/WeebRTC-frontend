@@ -22,8 +22,6 @@ import { FileInfo } from "@/views/Transfer.vue";
 import InputFile from "@/components/InputFile.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
 
-type k = typeof messages;
-
 @Component({
   components: { InputFile, ProgressBar }
 })
