@@ -22,6 +22,8 @@ import { FileInfo } from "@/views/Transfer.vue";
 import InputFile from "@/components/InputFile.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
 
+type k = typeof messages;
+
 @Component({
   components: { InputFile, ProgressBar }
 })
@@ -32,7 +34,7 @@ export default class FileSender extends Vue {
   transfered: number = 0;
   sc = new SpeedCounter(200);
   sizestr = sizestr;
-  status: keyof typeof messages["en"]["message"] = "fileselect";
+  status: keyof typeof messages["en"] = "fileselect";
 
   fileInfo: { name: string; size: number } | {} = {};
 

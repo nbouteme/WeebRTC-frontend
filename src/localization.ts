@@ -1,4 +1,4 @@
-export const messages: { [k in string]: any } = {
+export const messages = {
   fr: {
     head: 'Salut !',
     sub: 'Partagez avec WebRTC',
@@ -68,4 +68,5 @@ export const messages: { [k in string]: any } = {
   }
 };
 
-messages["en-US"] = messages.en;
+let fo: any = messages;
+fo["en-US"] = messages.en;

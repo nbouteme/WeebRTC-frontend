@@ -17,7 +17,7 @@ export default class TransferDialog extends Vue {
   @Prop()
   token!: string;
 
-  status: keyof typeof messages['en']['message'] = "none";
+  status: keyof typeof messages['en'] = "none";
 
   async created() {
     try {
