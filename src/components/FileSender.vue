@@ -30,7 +30,7 @@ export default class FileSender extends Vue {
   opts!: TransferArgs;
 
   transfered: number = 0;
-  sc = new SpeedCounter(1000);
+  sc = new SpeedCounter(200);
   sizestr = sizestr;
   status: keyof typeof messages["en"]["message"] = "fileselect";
 

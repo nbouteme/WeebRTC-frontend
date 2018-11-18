@@ -48,7 +48,7 @@ export default class Transfer extends Vue {
   transfering: boolean = false;
   key: string = "";
   downloaded: number = 0;
-  sc = new SpeedCounter(1000);
+  sc = new SpeedCounter(200);
   sizestr = sizestr;
   error: string = "";
   validEnc = validEnc;
@@ -77,24 +77,32 @@ export default class Transfer extends Vue {
       petits blobs, puis les fusionner, puis les décrypter, ils seront décrypté
       puis cumulé dans un blob qui grossira pour éventuellement être écrit sur
       disque. Cette méthode peut être plus lente mais permet de transférer des
-      fichiers plus gros. Optimisation possible: Cumuler dans un blob tampon de
+      fichiers plus gros. Optimisation: Cumuler dans un blob tampon de
       16Mo avant de concaténer au blob fileblob, pour éviter les accès disque 
       trop fréquents dans l'éventualité où le blob est stocké sur disque
     */
-
     try {
+      let pool: ArrayBuffer[] = [];
+      pool.length = 256;
+      let pid = 0;
       while (this.downloaded < this.info.size) {
         let blob = await datachannel.read<ArrayBuffer>(e => e.data);
         if (this.info.isEncrypted)
           blob = await codecBuffer(blob, this.key, "decrypt");
         this.downloaded += blob.byteLength;
         this.sc.addMeasure(blob.byteLength);
-        // this.$emit("progress", this.remaining);
-        // Peut-être une meilleur manière de faire qui évite la réallocation
-        fileblob = new Blob([fileblob, blob], {
-          type: "application/octet-stream"
-        });
+        if (pid == pool.length) {
+          pid = 0;
+          fileblob = new Blob([fileblob, ...pool], {
+            type: "application/octet-stream"
+          });
+        }
+        pool[pid++] = blob;
       }
+      pool.length = pid;
+      fileblob = new Blob([fileblob, ...pool], {
+        type: "application/octet-stream"
+      });
       this.sc.refresh();
       saveBlobAsFile(this.info.name, fileblob);
     } catch (e) {
