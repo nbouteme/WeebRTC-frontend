@@ -88,6 +88,7 @@ export default class Transfer extends Vue {
       // tel que décrit ici
       // https://www.youtube.com/watch?v=m9cTaYI95Zc
       const maxlen = 256;
+      let allocated = false;
       let pid = 0;
       while (this.downloaded < this.info.size) {
         let blob = await datachannel.read<ArrayBuffer>(e => e.data);
@@ -95,14 +96,23 @@ export default class Transfer extends Vue {
           blob = await codecBuffer(blob, this.key, "decrypt");
         this.downloaded += blob.byteLength;
         this.sc.addMeasure(blob.byteLength);
-        if (pid == maxlen) {
-          pid = 0;
-          fileblob = new Blob([fileblob, ...pool], {
-            type: "application/octet-stream"
-          });
+        if (pool.length != maxlen) {
+          pool.push(blob);
+        } else {
+          if (pid == maxlen) {
+            pid = 0;
+            // Toute cette gymnastique est surtout pour optimiser cette opération
+            fileblob = new Blob([fileblob, ...pool], {
+              type: "application/octet-stream"
+            });
+          }
+          // pas sur de si accéder à des indices indéfinis mais séquentiels partant
+          // du début du tableau garantisse les optimisations, donc dans le doute...
+          // et flemme de compiler v8 en debug
+          pool[pid++] = blob;
         }
-        pool[pid++] = blob;
       }
+      // Flush les blocs restants
       pool.length = pid;
       fileblob = new Blob([fileblob, ...pool], {
         type: "application/octet-stream"
@@ -111,7 +121,6 @@ export default class Transfer extends Vue {
       saveBlobAsFile(this.info.name, fileblob);
     } catch (e) {
       this.setError(e);
-      // this.$emit('error', e);
     }
   }
 
