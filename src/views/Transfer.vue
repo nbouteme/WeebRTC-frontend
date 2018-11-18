@@ -83,7 +83,11 @@ export default class Transfer extends Vue {
     */
     try {
       let pool: ArrayBuffer[] = [];
-      pool.length = 256;
+      // on ne fait pas pool.length = 256 pour que V8
+      // puisse optimiser les accès mémoire
+      // tel que décrit ici
+      // https://www.youtube.com/watch?v=m9cTaYI95Zc
+      const maxlen = 256;
       let pid = 0;
       while (this.downloaded < this.info.size) {
         let blob = await datachannel.read<ArrayBuffer>(e => e.data);
@@ -91,7 +95,7 @@ export default class Transfer extends Vue {
           blob = await codecBuffer(blob, this.key, "decrypt");
         this.downloaded += blob.byteLength;
         this.sc.addMeasure(blob.byteLength);
-        if (pid == pool.length) {
+        if (pid == maxlen) {
           pid = 0;
           fileblob = new Blob([fileblob, ...pool], {
             type: "application/octet-stream"
