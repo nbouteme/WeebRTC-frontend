@@ -58,7 +58,8 @@ export const messages = {
     randkey: 'Give me a random key',
 
     gentoken: 'Generating token...',
-    offline: 'This application requires online connectivity to use.'
+    offline: 'This application requires online connectivity to use.',
+    finished: 'Transfert finished!'
   },
   ja: {
     head: 'どうも',

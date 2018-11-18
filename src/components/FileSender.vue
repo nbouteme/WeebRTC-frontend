@@ -99,6 +99,8 @@ export default class FileSender extends Vue {
           }
         }
         this.sc.refresh();
+        this.transfered = 0;
+        this.status = 'finished';
       } catch (e) {
         console.log(e);
         this.status = "error";

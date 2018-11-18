@@ -41,7 +41,7 @@ Roadmap
 	- [ ] Expérience utilisateur
 		- [x] Internationalization
 		- [ ] Gestion d'erreur
-			- [ ] Si l'utilisateur est hors-ligne
+			- [x] Si l'utilisateur est hors-ligne
 				- Désactiver l'interface et rediriger vers une page d'erreur
 			- [ ] Si la WebSocket du serveur se ferme avant de trouver un pair
 				- Se reconnecter et regénérer un token
@@ -54,9 +54,9 @@ Roadmap
 			- [x] Empêcher de modifier les options de transferts quand un fichier est selectionné
 			- [x] Empêcher d'accepter un fichier tant qu'une clé valide n'a pas été entrée
 			- [x] Empêcher l'envoyeur de changer le fichier jusqu'à la fin du transfert
-		- [ ] Répétabilité de l'échange
+		- [x] Répétabilité de l'échange
 			- [x] Permettre de proposer un autre fichier en cas de refus
-			- [ ] Permettre de proposer un autre fichier après un transfert réussi
+			- [x] Permettre de proposer un autre fichier après un transfert réussi
 
 Installation
 ------------

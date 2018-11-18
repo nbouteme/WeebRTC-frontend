@@ -46,7 +46,9 @@ export default class TransferDialog extends Vue {
       await filechannel.open();
       this.status = "connectedPeer";
       while (filechannel.dc.readyState === "open") {
-        this.$emit("inputfile", await filechannel.read<FileInfo>());
+        let v = await filechannel.read<FileInfo>();
+        console.log(v);
+        this.$emit("inputfile", v);
       }
     } catch (e) {
       this.$emit('error', e);

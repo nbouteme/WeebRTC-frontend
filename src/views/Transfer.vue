@@ -96,29 +96,31 @@ export default class Transfer extends Vue {
           blob = await codecBuffer(blob, this.key, "decrypt");
         this.downloaded += blob.byteLength;
         this.sc.addMeasure(blob.byteLength);
-        if (pool.length != maxlen) {
-          pool.push(blob);
-        } else {
-          if (pid == maxlen) {
-            pid = 0;
-            // Toute cette gymnastique est surtout pour optimiser cette opération
-            fileblob = new Blob([fileblob, ...pool], {
-              type: "application/octet-stream"
-            });
-          }
-          // pas sur de si accéder à des indices indéfinis mais séquentiels partant
-          // du début du tableau garantisse les optimisations, donc dans le doute...
-          // et flemme de compiler v8 en debug
-          pool[pid++] = blob;
+        if (pid == maxlen) {
+          pid = 0;
+          // Toute cette gymnastique est surtout pour optimiser cette opération
+          fileblob = new Blob([fileblob, ...pool], {
+            type: "application/octet-stream"
+          });
         }
+        if (!allocated && pool.length != maxlen) {
+          pool.push(blob);
+          allocated = pool.length == maxlen;
+        } else if (allocated) pool[pid++] = blob;
+        // pas sur de si accéder à des indices indéfinis mais séquentiels partant
+        // du début du tableau garantisse les optimisations, donc dans le doute...
+        // et flemme de compiler v8 en debug
       }
       // Flush les blocs restants
-      pool.length = pid;
+      if (allocated)
+        pool.length = pid;
       fileblob = new Blob([fileblob, ...pool], {
         type: "application/octet-stream"
       });
       this.sc.refresh();
       saveBlobAsFile(this.info.name, fileblob);
+      this.transfering = false;
+      this.info = null;
     } catch (e) {
       this.setError(e);
     }
