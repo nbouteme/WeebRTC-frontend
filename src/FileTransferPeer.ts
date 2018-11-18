@@ -1,7 +1,7 @@
 import { peerConnectionConfig } from "@/config";
 import { sendMessage, info, CommandType, readMessage } from "@/SignallingServer";
 
-let nextFrame = () => new Promise<void>(r => requestAnimationFrame(e => r()));
+let nextFrame = (n: number = 20) => new Promise<void>(r => setTimeout(r, n));
 
 class FileTransferPeer {
     channels = new Map<string, RTCDataChannelWrapper>();
