@@ -2,7 +2,8 @@
   <div id="app">
     <Header/>
     <div id="content">
-      <router-view/>
+      <router-view v-if="!appState.offline"/>
+      <p v-else>{{$t('offline')}}</p>
     </div>
     <Footer/>
   </div>
@@ -12,6 +13,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
+import { appState } from '@/config';
 
 @Component({
   components: {
@@ -19,14 +21,16 @@ import Footer from "@/components/Footer.vue";
     Footer
   }
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  appState = appState;
+}
 </script>
 
 <style>
 @import url("https://fonts.googleapis.com/css?family=Itim");
 
 #app {
-  width: 420px;
+  width: 360px;
   margin: 0 auto 0 auto;
 }
 

@@ -2,17 +2,17 @@
 <div>
   <TransferDialog @inputfile="onInputFileChange" @error="setError" :token="$route.params.tok"/>
   <div v-if="info && !transfering">
-    {{$t('message.accept')}} {{info.name}} ({{sizestr(info.size)}})
+    {{$t('accept')}} {{info.name}} ({{sizestr(info.size)}})
       <input v-model="key" v-show="info.isEncrypted" placeholder="00112233445566778899AABBCCDDEEFF00112233445566778899AABBCCDDEEFF">
       <input :disabled="info.isEncrypted && !validEnc(key)" type="button" value="Yes" @click="startDownload">
       <input type="button" value="No" @click="refuseFile">
   </div>
   <div v-else-if="transfering">
-    {{sizestr(downloaded)}} / {{sizestr(info.size)}} ({{sizestr(sc.speed)}}/s)
-    <ProgressBar :value="downloaded" :max="info.size"/>
+    {{sizestr(sc.transfered)}} / {{sizestr(info.size)}} ({{sizestr(sc.speed)}}/s)
+    <ProgressBar :value="sc.transfered" :max="info.size"/>
   </div>
   <div v-else>
-    {{$t('message.waitingtransfer')}}
+    {{$t('waitingtransfer')}}
   </div>
   <div v-if="error">{{error}}</div>
 </div>
@@ -48,7 +48,7 @@ export default class Transfer extends Vue {
   transfering: boolean = false;
   key: string = "";
   downloaded: number = 0;
-  sc = new SpeedCounter();
+  sc = new SpeedCounter(1000);
   sizestr = sizestr;
   error: string = "";
   validEnc = validEnc;
@@ -95,6 +95,7 @@ export default class Transfer extends Vue {
           type: "application/octet-stream"
         });
       }
+      this.sc.refresh();
       saveBlobAsFile(this.info.name, fileblob);
     } catch (e) {
       this.setError(e);

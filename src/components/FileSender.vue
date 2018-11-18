@@ -1,12 +1,12 @@
 <template>
     <div>
-      {{$t("message." + status)}}
+      {{$t(status)}}
       <div v-if="!transfered">
         <InputFile @change="fileSelected"/>
       </div>
       <div v-else>
-        {{sizestr(transfered)}} / {{sizestr(fileInfo.size)}} ({{sizestr(sc.speed)}}/s)
-        <ProgressBar :value="transfered" :max="fileInfo.size"/>
+        {{sizestr(sc.transfered)}} / {{sizestr(fileInfo.size)}} ({{sizestr(sc.speed)}}/s)
+        <ProgressBar :value="sc.transfered" :max="fileInfo.size"/>
       </div>
     </div>
 </template>
@@ -16,8 +16,8 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { readMessage } from "@/SignallingServer";
 import { Peer } from "@/FileTransferPeer";
 import { codecBuffer, SpeedCounter, sizestr } from "@/utils";
-import { messages } from '@/localization';
-import { FileInfo } from '@/views/Transfer.vue';
+import { messages } from "@/localization";
+import { FileInfo } from "@/views/Transfer.vue";
 
 import InputFile from "@/components/InputFile.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
@@ -30,9 +30,9 @@ export default class FileSender extends Vue {
   opts!: TransferArgs;
 
   transfered: number = 0;
-  sc = new SpeedCounter();
+  sc = new SpeedCounter(1000);
   sizestr = sizestr;
-  status: keyof typeof messages['en']['message'] = "fileselect";
+  status: keyof typeof messages["en"]["message"] = "fileselect";
 
   fileInfo: { name: string; size: number } | {} = {};
 
@@ -48,8 +48,8 @@ export default class FileSender extends Vue {
       );
       await Peer.setSDP(await Peer.createAnswer());
       await Peer.connect();
-    };
-    this.status = 'sendingmeta';
+    }
+    this.status = "sendingmeta";
     let filechannel = await Peer.waitDataChannel("file");
     let datachannel = await Peer.waitDataChannel("data");
     let mess = await filechannel.send(
@@ -71,17 +71,34 @@ export default class FileSender extends Vue {
       await datachannel.open();
       try {
         while (remaining > 0) {
-          // 16k pour éviter des problèmes de compatibilité cross-browser
-          let chunk = file.slice(this.transfered, this.transfered + 0x10000);
-          this.transfered += chunk.size;
-          remaining -= chunk.size;
-          let buff = await new Response(chunk).arrayBuffer();
-          if (this.opts.encrypted)
-            buff = await codecBuffer(buff, this.opts.key!, "encrypt");
-          await datachannel.send(buff);
-          await datachannel.flush();
-          this.sc.addMeasure(buff.byteLength);
+          // Lit le fichier par bloc de 16Mb, car slice est relativement couteux.
+          let bigchunk = file.slice(
+            this.transfered,
+            this.transfered + 0x1000000
+          );
+          let buff = await new Response(bigchunk).arrayBuffer();
+          let bigchunkleft = buff.byteLength;
+          let bigchunkOffset = 0;
+          while (bigchunkleft > 0) {
+            // 16k pour éviter des problèmes de compatibilité cross-browser
+            let view = new Uint8Array(
+              buff,
+              bigchunkOffset,
+              Math.min(0x10000, bigchunkleft)
+            );
+            this.transfered += view.byteLength;
+            bigchunkOffset += view.byteLength;
+            remaining -= view.byteLength;
+            bigchunkleft -= view.byteLength;
+            let outgoing;
+            if (this.opts.encrypted)
+              outgoing = await codecBuffer(view, this.opts.key!, "encrypt");
+            await datachannel.send(view);
+            await datachannel.flush();
+            this.sc.addMeasure(view.byteLength);
+          }
         }
+        this.sc.refresh();
       } catch (e) {
         console.log(e);
         this.status = "error";

@@ -1,7 +1,7 @@
 <template>
 <div>
-    <h1>{{$t("message.head")}}</h1>
-    <h3>{{$t("message.sub")}}</h3>
+    <h1>{{$t("head")}}</h1>
+    <h3>{{$t("sub")}}</h3>
 </div>
 </template>
 

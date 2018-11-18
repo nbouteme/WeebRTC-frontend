@@ -1,6 +1,6 @@
 <template>
     <div>
-      <button ref="button">{{$t("message.select")}}</button>
+      <button ref="button">{{$t("select")}}</button>
       <input ref="fileinput" type="file" name="afile"/>
     </div>
 </template>
@@ -15,19 +15,19 @@ export default class InputFile extends Vue {
     let button = this.$refs.button as HTMLButtonElement;
     fileinput.onchange = e => {
       if (!fileinput.files || fileinput.files.length === 0)
-        button.textContent = this.$t("message.select").toString();
+        button.textContent = this.$t("select").toString();
       else
         button.textContent = fileinput.files[0].name;
       this.$emit('change', fileinput);
     };
 
     fileinput.ondragenter = e => {
-      button.textContent = this.$t("message.drop").toString();
+      button.textContent = this.$t("drop").toString();
       button.classList.add("dropping");
     };
 
     fileinput.ondragleave = e => {
-      button.textContent = this.$t("message.select").toString();
+      button.textContent = this.$t("select").toString();
       button.classList.remove("dropping");
     };
   }

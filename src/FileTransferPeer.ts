@@ -160,22 +160,28 @@ class RTCDataChannelWrapper {
     // https://github.com/Microsoft/TypeScript/issues/14107
     // Retiré blob de l'union car l'envoi de blob n'est pas supporté dans chrome.
     async send(data: string | ArrayBuffer | ArrayBufferView) {
-        await this.open();
+        switch (this.dc.readyState) {
+            case 'open':
+                break;
+            case 'connecting':
+                await this.open();
+                break;
+            default:
+                throw this.dc.readyState;
+        }
         this.dc.send(data as any);
     }
 
-    /*
-        Dans le cas d'échanges de gros fichiers, des packets risquent
-        de s'accumuler dans le tampon de sortie.
-        À partir de 16Mo, sous Chrome, la datachannel est immediatement fermée:
-        https://bugs.chromium.org/p/webrtc/issues/detail?id=2866#c34
-    */
+    //  Dans le cas d'échanges de gros fichiers, des packets risquent
+    //  de s'accumuler dans le tampon de sortie.
+    //  À partir de 16Mo, sous Chrome, la datachannel est immediatement fermée:
+    //  https://bugs.chromium.org/p/webrtc/issues/detail?id=2866#c34
     async flush() {
         // onbufferedamountlow n'est jamais émit sur chrome
         // https://bugs.chromium.org/p/chromium/issues/detail?id=582085
         // Donc on ne peut pas compter dessus.
         if (this.dc.bufferedAmount > 0x800000)
-            while (this.dc.bufferedAmount > 0x4000)
+            while (this.dc.readyState == 'open' && this.dc.bufferedAmount > 0x4000)
                 await nextFrame();
     }
 

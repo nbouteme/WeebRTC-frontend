@@ -41,14 +41,19 @@ Roadmap
 	- [ ] Expérience utilisateur
 		- [x] Internationalization
 		- [ ] Gestion d'erreur
-			- [ ] Afficher une erreur si l'envoyeur ferme la connexion à n'importe quel point
-			- [x] Afficher une erreur si l'envoyer ferme la connexion durant le transfert
-			- [ ] Afficher une erreur si le receveur ferme la connexion à n'importe quel point
-		- [ ] Afficher/cacher des éléments selon l'étape dans le processus de partage
+			- [ ] Si l'utilisateur est hors-ligne
+				- Désactiver l'interface et rediriger vers une page d'erreur
+			- [ ] Si la WebSocket du serveur se ferme avant de trouver un pair
+				- Se reconnecter et regénérer un token
+			- [ ] Afficher une erreur si :
+				- [x] l'envoyeur ferme la connexion à n'importe quel point
+				- [x] l'envoyeur ferme la connexion durant le transfert
+				- [ ] le receveur ferme la connexion à n'importe quel point
+		- [x] Afficher/cacher des éléments selon l'étape dans le processus de partage
 			- [x] Cacher l'entrée fichier si encryption séléctionnée et clé non valide
 			- [x] Empêcher de modifier les options de transferts quand un fichier est selectionné
 			- [x] Empêcher d'accepter un fichier tant qu'une clé valide n'a pas été entrée
-			- [ ] Empêcher l'envoyeur de changer le fichier jusqu'à la fin du transfert
+			- [x] Empêcher l'envoyeur de changer le fichier jusqu'à la fin du transfert
 		- [ ] Répétabilité de l'échange
 			- [x] Permettre de proposer un autre fichier en cas de refus
 			- [ ] Permettre de proposer un autre fichier après un transfert réussi

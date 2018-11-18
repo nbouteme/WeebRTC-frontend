@@ -16,7 +16,7 @@ export async function stringToAESKey(keystr: string, purpose = ['decrypt', 'encr
         }, true, purpose);
 }
 
-export async function codecBuffer(buff: ArrayBuffer, keystr: string, action: 'decrypt' | 'encrypt') {
+export async function codecBuffer(buff: Uint8Array | ArrayBuffer, keystr: string, action: 'decrypt' | 'encrypt') {
     return crypto.subtle[action]({
         name: "AES-CBC",
         iv: iv
@@ -60,14 +60,34 @@ interface Measure {
 
 export class SpeedCounter {
     speed: number = 0;
+    transfered: number = 0;
     private measures: Measure[] = [];
+    private realSpeed: number = 0;
+    private realTransfered: number = 0;
+    private nextUpdate: number;
+    private accuracy: number;
+
+    constructor(accuracy: number) {
+        this.nextUpdate = Date.now() + accuracy;
+        this.accuracy = accuracy;
+    }
 
     addMeasure(transfered: number) {
-        let now = +new Date();
+        let now = Date.now();
         this.measures.push({ transfered, timestamp: now });
-        this.speed += transfered;
+        this.realSpeed += transfered;
+        this.realTransfered += transfered;
         while (now - this.measures[0].timestamp > 1000)
-            this.speed -= this.measures.shift()!.transfered;
+            this.realSpeed -= this.measures.shift()!.transfered;
+        if (now - this.nextUpdate > 0) {
+            this.refresh();
+        }
+    }
+
+    refresh() {
+        this.speed = this.realSpeed;
+        this.transfered = this.realTransfered;
+        this.nextUpdate = Date.now() + this.accuracy;
     }
 }
 

@@ -1,6 +1,6 @@
 <template>
   <CopyableText>
-    <label slot="name">{{$t('message.token')}}</label>
+    <label slot="name">{{$t('token')}}</label>
     <span slot="hidden">{{myorigin}}/{{token}}</span>
     <router-link slot="content" :to="token">{{token}}</router-link>
   </CopyableText>
@@ -36,7 +36,7 @@ export default class TokenDisplay extends Vue {
 
   async mounted() {
     this.myorigin = location.origin;
-    this.token = this.$t("message.gentoken").toString();
+    this.token = this.$t("gentoken").toString();
     await this.refreshToken();
   }
 }

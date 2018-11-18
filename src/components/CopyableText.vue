@@ -3,7 +3,7 @@
     <slot name="name"></slot>
     <slot ref="begin" name="hidden"></slot>
     <slot name="content"></slot>
-    <label class="button" ref="copy">{{$t('message.copy')}}</label>
+    <label class="button" ref="copy">{{$t('copy')}}</label>
   </div>
 </template>
 

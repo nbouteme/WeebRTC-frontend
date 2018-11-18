@@ -12,6 +12,8 @@ export let peerConnectionConfig: RTCConfiguration = {
     }]
 };
 
+export let appState: { offline: boolean } = { offline: false };
+
 if (BUILD === 'development')
     peerConnectionConfig.iceServers!.unshift({ urls: 'stun:localhost:3478' });
 
