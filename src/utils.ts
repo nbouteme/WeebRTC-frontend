@@ -92,8 +92,8 @@ export class SpeedCounter {
 }
 
 export function validEnc(k: string) {
-  k = k.toLowerCase();
-  return k.match(/^ *[0-9a-f]{64} *$/g);
+    k = k.toLowerCase();
+    return k.match(/^ *[0-9a-f]{64} *$/g);
 };
 
 export function saveBlobAsFile(name: string, data: Blob) {

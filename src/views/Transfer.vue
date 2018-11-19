@@ -92,6 +92,7 @@ export default class Transfer extends Vue {
       let pid = 0;
       while (this.downloaded < this.info.size) {
         let blob = await datachannel.read<ArrayBuffer>(e => e.data);
+        let v = new Uint8Array(blob);
         if (this.info.isEncrypted)
           blob = await codecBuffer(blob, this.key, "decrypt");
         this.downloaded += blob.byteLength;
@@ -112,8 +113,7 @@ export default class Transfer extends Vue {
         // et flemme de compiler v8 en debug
       }
       // Flush les blocs restants
-      if (allocated)
-        pool.length = pid;
+      if (allocated) pool.length = pid;
       fileblob = new Blob([fileblob, ...pool], {
         type: "application/octet-stream"
       });
@@ -122,6 +122,7 @@ export default class Transfer extends Vue {
       this.transfering = false;
       this.info = null;
     } catch (e) {
+      console.error(e);
       this.setError(e);
     }
   }

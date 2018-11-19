@@ -90,17 +90,20 @@ export default class FileSender extends Vue {
             bigchunkOffset += view.byteLength;
             remaining -= view.byteLength;
             bigchunkleft -= view.byteLength;
-            let outgoing;
-            if (this.opts.encrypted)
+            let outgoing: ArrayBuffer;
+            if (this.opts.encrypted) {
               outgoing = await codecBuffer(view, this.opts.key!, "encrypt");
-            await datachannel.send(view);
+              await datachannel.send(outgoing);
+            } else {
+              await datachannel.send(view);
+            }
             await datachannel.flush();
             this.sc.addMeasure(view.byteLength);
           }
         }
         this.sc.refresh();
         this.transfered = 0;
-        this.status = 'finished';
+        this.status = "finished";
       } catch (e) {
         console.log(e);
         this.status = "error";
