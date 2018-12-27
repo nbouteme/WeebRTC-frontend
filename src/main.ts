@@ -3,7 +3,6 @@ import App from './App.vue';
 import router from './router';
 import VueI18n from 'vue-i18n';
 
-import './registerServiceWorker';
 import { messages } from './localization';
 
 // Create VueI18n instance with options

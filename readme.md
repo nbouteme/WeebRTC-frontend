@@ -43,12 +43,12 @@ Roadmap
 		- [ ] Gestion d'erreur
 			- [x] Si l'utilisateur est hors-ligne
 				- Désactiver l'interface et rediriger vers une page d'erreur
-			- [ ] Si la WebSocket du serveur se ferme avant de trouver un pair
-				- Se reconnecter et regénérer un token
-			- [ ] Afficher une erreur si :
+			- [ ] Si la WebSocket du serveur se ferme avant de trouver un pair (Tellement peu probable que c'est même pas la peine de gérer ce cas)
+				- Raffraichir la page
+			- [x] Afficher une erreur si :
 				- [x] l'envoyeur ferme la connexion à n'importe quel point
 				- [x] l'envoyeur ferme la connexion durant le transfert
-				- [ ] le receveur ferme la connexion à n'importe quel point
+				- [x] le receveur ferme la connexion à n'importe quel point
 		- [x] Afficher/cacher des éléments selon l'étape dans le processus de partage
 			- [x] Cacher l'entrée fichier si encryption séléctionnée et clé non valide
 			- [x] Empêcher de modifier les options de transferts quand un fichier est selectionné

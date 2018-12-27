@@ -2,8 +2,7 @@
   <div id="app">
     <Header/>
     <div id="content">
-      <router-view v-if="!appState.offline"/>
-      <p v-else>{{$t('offline')}}</p>
+      <router-view/>
     </div>
     <Footer/>
   </div>
@@ -13,7 +12,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
-import { appState } from '@/config';
 
 @Component({
   components: {
@@ -22,7 +20,6 @@ import { appState } from '@/config';
   }
 })
 export default class App extends Vue {
-  appState = appState;
 }
 </script>
 

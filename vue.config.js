@@ -5,12 +5,6 @@ module.exports = {
   runtimeCompiler: true,
   productionSourceMap: false,
 
-  pwa: {
-    name: 'WeebRTC',
-    themeColor: '#bb0090',
-    appleMobileWebAppCapable: 'yes',
-    appleMobileWebAppStatusBarStyle: 'black',  
-  },
   pluginOptions: {
     webpackBundleAnalyzer: {
       openAnalyzer: false
