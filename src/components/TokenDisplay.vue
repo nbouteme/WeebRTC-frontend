@@ -41,3 +41,9 @@ export default class TokenDisplay extends Vue {
   }
 }
 </script>
+
+<style scoped>
+span {
+  width: 0;
+}
+</style>
